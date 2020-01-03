@@ -188,6 +188,7 @@ class RoomDetailViewModel @AssistedInject constructor(@Assisted initialState: Ro
             is RoomDetailAction.AcceptVerificationRequest        -> handleAcceptVerification(action)
             is RoomDetailAction.DeclineVerificationRequest       -> handleDeclineVerification(action)
             is RoomDetailAction.RequestVerification              -> handleRequestVerification(action)
+            is RoomDetailAction.ResumeVerification              -> handleResumeRequestVerification(action)
         }
     }
 
@@ -823,6 +824,18 @@ class RoomDetailViewModel @AssistedInject constructor(@Assisted initialState: Ro
 
     private fun handleRequestVerification(action: RoomDetailAction.RequestVerification) {
         _requestLiveData.postValue(LiveEvent(Success(action)))
+    }
+
+    private fun handleResumeRequestVerification(action: RoomDetailAction.ResumeVerification) {
+        // Check if this request is still active and handled by me
+        session.getSasVerificationService().getExistingVerificationRequestInRoom(room.roomId, action.transactionId)?.let {
+            if (it.handledByOtherSession) return
+            if (!it.isFinished) {
+                _requestLiveData.postValue(LiveEvent(Success(action.copy(
+                        otherUserId = it.otherUserId
+                ))))
+            }
+        }
     }
 
     private fun observeSyncState() {
