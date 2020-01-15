@@ -48,5 +48,8 @@
 
     <string name="verification_request_alert_title">Verify %s</string>
     <string name="verification_request_waiting_for">Waiting for %s…</string>
-    <string name="verification_request_alert_description">For extra security, verify %s by checking a one-time code on both your devices.\n\nFor maximum security, do this in person.</string>
+
+    <string name="verification_request_notice">For extra security, verify %s by checking a one-time code.</string>
+    <string name="verification_request_start_notice">For maximum security, do this in person.</string>
+
 </resources>
